@@ -1,6 +1,8 @@
-name: Caching Primes
+name: Cache Prime da22e55
 
-on: [push, workflow_dispatch]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -8,20 +10,21 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-    - name: Cache Primes
-      id: cache-primes
+    - name: Cache step
+      id: cache-step
       uses: actions/cache@v4
       with:
-        path: prime-numbers
+        path: cache-folder
         key: cache-da22e55
 
-    - name: Generate Prime Numbers
-      if: steps.cache-primes.outputs.cache-hit != 'true'
+    - name: Generate file if cache miss
+      if: steps.cache-step.outputs.cache-hit != 'true'
       run: |
-        mkdir -p prime-numbers
-        echo "2, 3, 5, 7, 11, 13, 17, 19, 23, 29" > prime-numbers/primes.txt
+        mkdir cache-folder
+        echo "cache test" > cache-folder/file.txt
 
     - name: prime-cache-da22e55
-      run: echo "Cache hit ${{ steps.cache-primes.outputs.cache-hit }}"
+      run: echo "Cache hit ${{ steps.cache-step.outputs.cache-hit }}"
